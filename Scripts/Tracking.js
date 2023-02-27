@@ -3,86 +3,67 @@ const Web3 = require("web3")
 //Set web3 provider (infura, quicknode, or another)
 const web3 = new Web3("")
 
-//Set contract address
+//Set address, whose balance you want to track
+const trackingAddress = ""
+//Set address, that will receive the token
+const receiverAddress = ""
+//Set token contract address
 const contractAddress = ""
-//Set contract ABI
+//Set token contract ABI
 const contractABI = 
-//Set chain id
-const chainId = 56
+//Set current chain id
+const chainId = 
 //Set wallet private key ()
 const privateKey = ''
 
-const distContract = new web3.eth.Contract(contractABI, contractAddress)
-const myDataForUsdt = distContract.methods.distributionUsdt().encodeABI()
-const myDataForBusd = distContract.methods.distributionBusd().encodeABI()
+//Set token contract from address and ABI
+const tokenContract = new web3.eth.Contract(contractABI, contractAddress)
 
+//Export checkBalance function
 module.exports = {
     checkBalance: checkBalance
 }
+
+//Call checkBalance function
 checkBalance()
+
 function checkBalance() {
-    distContract.methods.getUsdtBalance().call(function (err, res) {
+    //Call balanceOf function of token smart contract, to find out the balance
+    tokenContract.methods.balanceOf(trackingAddress).call(function (err, res) {
         if (err) {
             console.log("An error occurred", err)
             return
         }
-        console.log("The USDT balance is: ", res)
-       if (res > 0)
-           distUsdt()
-        else 
-            checkBusdBalance()
-    })
-}
 
-function checkBusdBalance() {
-    distContract.methods.getBusdBalance().call(function (err, res) {
-        if (err) {
-            console.log("An error occurred", err)
-            return
-        }
-        console.log("The BUSD balance is: ", res)
+        console.log("The token balance is: ", res)
+        //If address has tokens, send it
         if (res > 0)
-          distBusd()
+            sendToken(res)          
     })
 }
 
-async function distUsdt() {
-    console.log("USDT transfer")
+async function sendToken(amount) {
+    //Check current gas price
     var gasPrice
     web3.eth.getGasPrice(function (err, res) {
         gasPrice = res
         console.log(gasPrice)
     })
+
+    //Set data for transaction (call contract function encoded to ABI), in this case is transfer function
+    const trxData = tokenContract.methods.transfer(receiverAddress, amount).encodeABI()
+
+    //Set transaction
     var rawTx = {
         gasPrice: web3.utils.numberToHex(gasPrice),
         gasLimit: web3.utils.numberToHex(30000000),
         to: contractAddress,
         value: web3.utils.numberToHex(web3.utils.toWei("0", 'ether')),
-        data: myDataForUsdt,
+        data: trxData,
         chainId: chainId
     }
 
-    web3.eth.accounts.signTransaction(rawTx, privateKey).then(RLPencodedTx => {
-        web3.eth.sendSignedTransaction(RLPencodedTx['rawTransaction']).on('receipt', console.log)
-    })
-}
-
-async function distBusd() {
-    console.log("BUSD transfer")
-    var gasPrice
-    web3.eth.getGasPrice(function (err, res) {
-        gasPrice = res
-        console.log(gasPrice)
-    })
-    var rawTx = {
-        gasPrice: web3.utils.numberToHex(gasPrice),
-        gasLimit: web3.utils.numberToHex(30000000),
-        to: contractAddress,
-        value: web3.utils.numberToHex(web3.utils.toWei("0", 'ether')),
-        data: myDataForBusd,
-        chainId: chainId
-    }
-
+    //Sign transaction, and then send this transaction
     web3.eth.accounts.signTransaction(rawTx, privateKey).then(RLPencodedTx => {
         web3.eth.sendSignedTransaction(RLPencodedTx['rawTransaction']).on('receipt', console.log)
     })
