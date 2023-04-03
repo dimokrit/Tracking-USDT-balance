@@ -31,7 +31,7 @@ In the scripts, a comment is written under each command to understand how the co
 
 After filling in all the necessary fields and setting the necessary parameters, you just need to run the Tracking script for one-time tracking, and the Cron script to run a cyclic check.
 ________________________
-Later I will add autoplay of the code in case of errors
+Later I will add autoplay of the code in case of errors.
 ________________________
 ### Thanks for watching!
 
@@ -42,4 +42,4 @@ ________________________
 
 ## License
 
-Project is distributed under the MIT license
+Project is distributed under the MIT license.
