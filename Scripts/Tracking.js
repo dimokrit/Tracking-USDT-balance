@@ -1,19 +1,19 @@
 //Import web3 library
 const Web3 = require("web3")
-//Set web3 provider (infura, quicknode, or another)
+//Set web3 provider (infura, quicknode, or another) !!!
 const web3 = new Web3("")
 
-//Set address, whose balance you want to track
+//Set address, whose balance you want to track !!!
 const trackingAddress = ""
-//Set address, that will receive the token
+//Set address, that will receive the token !!!
 const receiverAddress = ""
-//Set token contract address
+//Set token contract address !!!
 const contractAddress = ""
-//Set token contract ABI
+//Set token contract ABI !!!
 const contractABI = 
-//Set current chain id
+//Set current chain id !!!
 const chainId = 
-//Set wallet private key ()
+//Set wallet private key () !!!
 const privateKey = ''
 
 //Set token contract from address and ABI
@@ -30,6 +30,7 @@ checkBalance()
 function checkBalance() {
     //Call balanceOf function of token smart contract, to find out the balance
     tokenContract.methods.balanceOf(trackingAddress).call(function (err, res) {
+        //Fail catcher
         if (err) {
             console.log("An error occurred", err)
             return
