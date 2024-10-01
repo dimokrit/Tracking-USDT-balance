@@ -9,7 +9,7 @@
 ## About
 
 Greetings!  
-You are presented with a script that tracks the balance of negative tokens on a smart contract or wallet. When a token is detected, it sends it to the address you specified. The script can be used to forward payouts and other tasks.The cron library is used to loop the balance check. See below how to install the library.
+You are presented with a script that tracks the balance of native tokens on a smart contract or wallet. When a token is detected, it sends it to the address you specified. The script can be used to forward payouts and other tasks.The cron library is used to loop the balance check. See below how to install the library.
 
 The Tracking script is responsible for tracking the balance and calling functions from the contract.  
 The cron script is responsible for repeating the balance check with the Tracking script
